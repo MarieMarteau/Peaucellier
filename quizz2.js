@@ -2,6 +2,7 @@ const quizContainer = document.getElementById('quiz');
 const resultsContainer = document.getElementById('results');
 const submitButton = document.getElementById('submit');
 const nextButton = document.getElementById('next');
+const txtNext = document.getElementById('txtNext');
 const clueButton = document.getElementById('indice');
 const body = document.getElementsByTagName('body');
 
@@ -106,29 +107,17 @@ function showResults(){
   }
   
   nextButton.style.visibility='visible';
+  txtNext.style.visibility='visible';
   submitButton.style.visibility='hidden';
+  clueButton.style.visibility='hidden';
 
 }
 
 function showClue(){
-	if(peaucellier.style.visibility=='visible')
-	{
-		peaucellier.style.visibility='hidden';
-		peaucellier2.style.visibility='visible';
-	}
-	else{
-		peaucellier.style.visibility='visible';
-		peaucellier2.style.visibility='hidden';
-	}
-	if(watt.style.visibility=='visible')
-	{
-		watt.style.visibility='hidden';
-		watt2.style.visibility='visible';
-	}
-	else{
-		watt.style.visibility='visible';
-		watt2.style.visibility='hidden';
-	}
+	peaucellier.style.visibility='hidden';
+	peaucellier2.style.visibility='visible';
+	watt.style.visibility='hidden';
+	watt2.style.visibility='visible';
 }
 
 buildQuiz();

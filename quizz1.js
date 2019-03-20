@@ -2,6 +2,7 @@ const quizContainer = document.getElementById('quiz');
 const resultsContainer = document.getElementById('results');
 const submitButton = document.getElementById('submit');
 const nextButton = document.getElementById('next');
+const txtNext = document.getElementById('txtNext');
 const body = document.getElementsByTagName('body');
 
 
@@ -108,6 +109,7 @@ function showResults(){
   }
   
   nextButton.style.visibility='visible';
+  txtNext.style.visibility='visible';
   submitButton.style.visibility='hidden';
 
 }
