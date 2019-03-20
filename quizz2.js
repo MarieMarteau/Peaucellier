@@ -2,7 +2,14 @@ const quizContainer = document.getElementById('quiz');
 const resultsContainer = document.getElementById('results');
 const submitButton = document.getElementById('submit');
 const nextButton = document.getElementById('next');
+const clueButton = document.getElementById('indice');
 const body = document.getElementsByTagName('body');
+
+const peaucellier = document.getElementById('peaucellier');
+const peaucellier2 = document.getElementById('peaucellier2');
+const watt = document.getElementById('watt');
+const watt2 = document.getElementById('watt2');
+
 
 
 const myQuestions = [
@@ -34,6 +41,7 @@ function buildQuiz(){
         // ...add an HTML radio button
         answers.push(
           `<label>
+		  </br>
             <input type="radio" name="question${questionNumber}" value="${letter}">
             ${letter} :
             ${currentQuestion.answers[letter]}
@@ -102,6 +110,28 @@ function showResults(){
 
 }
 
+function showClue(){
+	if(peaucellier.style.visibility=='visible')
+	{
+		peaucellier.style.visibility='hidden';
+		peaucellier2.style.visibility='visible';
+	}
+	else{
+		peaucellier.style.visibility='visible';
+		peaucellier2.style.visibility='hidden';
+	}
+	if(watt.style.visibility=='visible')
+	{
+		watt.style.visibility='hidden';
+		watt2.style.visibility='visible';
+	}
+	else{
+		watt.style.visibility='visible';
+		watt2.style.visibility='hidden';
+	}
+}
 
 buildQuiz();
 submitButton.addEventListener('click', showResults);
+
+clueButton.addEventListener('click', showClue);
