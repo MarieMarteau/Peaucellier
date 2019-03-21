@@ -135,3 +135,11 @@ iframe{
 	color:rgba(139, 54, 8, 1);
 	font-family:Timeless;
 }
+
+#home {
+	left:2%;
+	bottom:2%;
+	width:5%;
+	display:block;
+	position:absolute;
+}
