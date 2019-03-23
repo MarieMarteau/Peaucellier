@@ -63,6 +63,16 @@ iframe{
   margin:3%;
 }
 
+#Texte5 {
+  opacity:0;
+  animation-name: example;
+  animation-duration: 5s;
+  animation-delay:18s;
+  animation-fill-mode: forwards;
+  font-size : 20px;
+  margin:3%;
+}
+
 #Titre { 
 	width:40%;
 	height:10%;
@@ -94,7 +104,7 @@ iframe{
 	width:100%;
 	height:100%;
 	position:absolute;
-	top:20%;
+	top:10%;
 	border:none;
 	outline:none;
 	text-align:center;
@@ -144,15 +154,14 @@ iframe{
 	position:absolute;
 }
 
-#math {
+#annales{
 	opacity:0;
   animation-name: example;
   animation-duration: 5s;
   animation-fill-mode: forwards;
-	left:2.5%;
-	top:50%;
-	transform : translateY(-50%);
-	width:40%;
+	left:13%;
+	bottom:12%;
+	height:55%;
 	display:block;
 	position:absolute;
 }
