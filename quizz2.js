@@ -10,15 +10,16 @@ const peaucellier = document.getElementById('peaucellier');
 const peaucellier2 = document.getElementById('peaucellier2');
 const watt = document.getElementById('watt');
 const watt2 = document.getElementById('watt2');
+const observez = document.getElementById('observez');
 
 
 
 const myQuestions = [
   {
-    question: "Comparez les deux parallélogrammes. Lequel vous semble plus précis ?",
+    question: "Comparez les deux dispositifs. Pour tracer une ligne droite, lequel vous semble le plus précis ?",
     answers: {
       a: "Le parallélogramme de Peaucellier",
-      b: "Le parallélogramme de Watt",
+      b: "Le dispositif de Watt",
     },
     correctAnswer: "a"
   },  
@@ -118,6 +119,8 @@ function showClue(){
 	peaucellier2.style.visibility='visible';
 	watt.style.visibility='hidden';
 	watt2.style.visibility='visible';
+	clueButton.style.visibility='hidden';
+	observez.style.visibility='visible';
 }
 
 buildQuiz();
