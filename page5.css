@@ -144,3 +144,14 @@ iframe{
 	display:block;
 	position:absolute;
 }
+
+#legend {
+	width:40%;
+	text-align:center;
+	bottom:15%;
+	left:2.5%;
+	display:block;
+	position:absolute;
+	font-family:Timeless;
+	color:rgba(255, 208, 73, 1);
+}

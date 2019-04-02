@@ -164,3 +164,13 @@ iframe{
 	position:absolute;
 }
 */
+
+#legend {
+	width:45%;
+	text-align:center;
+	bottom:10%;
+	display:block;
+	position:absolute;
+	font-family:Timeless;
+	color:rgba(255, 208, 73, 1);
+}
