@@ -2,8 +2,12 @@ const quizContainer = document.getElementById('quiz');
 const resultsContainer = document.getElementById('results');
 const submitButton = document.getElementById('submit');
 const nextButton = document.getElementById('next');
+const clueButton = document.getElementById('indice');
 const txtNext = document.getElementById('txtNext');
 const body = document.getElementsByTagName('body');
+const peaucellier = document.getElementById('peaucellier');
+const peaucellier2 = document.getElementById('peaucellier2');
+const observez = document.getElementById('observez');
 
 
 const myQuestions = [
@@ -114,6 +118,14 @@ function showResults(){
 
 }
 
+function showClue(){
+	peaucellier.style.visibility='hidden';
+	peaucellier2.style.visibility='visible';
+	clueButton.style.visibility='hidden';
+	observez.style.visibility='visible';
+}
+
 
 buildQuiz();
 submitButton.addEventListener('click', showResults);
+clueButton.addEventListener('click', showClue);

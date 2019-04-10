@@ -11,18 +11,53 @@ function main() {
         renderer: null,
         controls: null
     };
+	
+	const pickingData = {
+        descente:false,
+		remontee:false,
+		enabled: true,		// Mode picking en cours ou désactivé (CTRL enfoncé)
+        enableDragAndDrop: false, // Drag and drop en cours ou désactivé
+        selectableObjects: [],    // Les objets selectionnables par picking
+        selectedObject: null,     // L'objet actuellement selectionné
+        selectedPlane: {p:null,n:null}, // Le plan de la caméra au moment de la selection. Plan donné par une position p, et une normale n.
+    };
 
     initEmptyScene(sceneThreeJs);
-    init3DObjects(sceneThreeJs.sceneGraph);
+    init3DObjects(sceneThreeJs.sceneGraph,pickingData);
+	
+	// *************************** //
+    // Creation d'un lanceur de rayon (ray caster) de Three.js pour le calcul de l'intersection entre un objet et un rayon
+    // *************************** //
+    const raycaster = new THREE.Raycaster();
 
+    // *************************** //
+    // Fonction de rappels
+    // *************************** //
 
+    // Récupération de la taille de la fenetre en tant que variable à part
+    const screenSize = {
+        w:sceneThreeJs.renderer.domElement.clientWidth,
+        h:sceneThreeJs.renderer.domElement.clientHeight
+    };
+
+// Fonction à appeler lors du clic de la souris: selection d'un objet
+    //  (Création d'un wrapper pour y passer les paramètres souhaités)
+    const wrapperMouseDown = function(event) { onMouseDown(event,raycaster,pickingData,screenSize,sceneThreeJs.camera); };
+    document.addEventListener( 'mousedown', wrapperMouseDown );
+
+    const wrapperMouseUp = function(event) { onMouseUp(event,pickingData); };
+    document.addEventListener( 'mouseup', wrapperMouseUp );
+
+    // Fonction à appeler lors du déplacement de la souris: translation de l'objet selectionné
+    const wrapperMouseMove = function(event) { onMouseMove(event, pickingData, screenSize, sceneThreeJs.camera,sceneThreeJs.sceneGraph) };
+    document.addEventListener( 'mousemove', wrapperMouseMove );
+	
     animationLoop(sceneThreeJs);
-	interaction(sceneThreeJs);
 
 }
 
 // Initialise les objets composant la scène 3D
-function init3DObjects(sceneGraph) {
+function init3DObjects(sceneGraph,pickingData) {
 
 	const a = 7;
 	const d = 12;
@@ -41,6 +76,8 @@ function init3DObjects(sceneGraph) {
 	I.position.set(-a, 0,0);
 	I.castShadow = true;
 	I.name = "I";
+	pickingData.selectableObjects.push(A);
+	
 	
 	const O = createCylinder("O",Vector3(0,0,0));
 	const C = createCylinder("C",Vector3(d,0,0));
@@ -52,6 +89,7 @@ function init3DObjects(sceneGraph) {
 	sceneGraph.add(C);
 	sceneGraph.add(B);
 	sceneGraph.add(D);
+	pickingData.selectableObjects.push(C);
 	
 	const DA = createBar(L, "DA");
 	const AB = createBar(L, "AB");
@@ -103,51 +141,51 @@ function init3DObjects(sceneGraph) {
 	barBetween(coordo,coordd,OD);
 	AI.position.z=-1;
 	
-	//Visualisation des mouvements
+	let pts1=[];
+	const l1 = 0.15*2;
+	const l2 = 0.3*2;
+	const l3 = 0.1*2;
+	const l4 = 0.3*2;
+    pts1.push(new THREE.Vector2(0,l1));
+	pts1.push(new THREE.Vector2(l2,l1));
+	pts1.push(new THREE.Vector2(l2,l1+l3));
+	pts1.push(new THREE.Vector2(l2+l4,0));
+	pts1.push(new THREE.Vector2(l2,-l1-l3));
+	pts1.push(new THREE.Vector2(l2,-l1));
+	pts1.push(new THREE.Vector2(0,-l1));
+	pts1.push(new THREE.Vector2(0,l1));
+    const shape1 = new THREE.Shape( pts1 );
 	
-	/*const lineM = new THREE.LineDashedMaterial( { color: 0xc51515,
-	linewidth: 100,
-	scale: 1,
-	dashSize: 3,
-	gapSize: 10,} );
-	const lineG = new THREE.Geometry();
-	lineG.vertices.push(new THREE.Vector3( 12, -7, 0));
-	lineG.vertices.push(new THREE.Vector3( 12, 7, 0));
-	lineG.vertices.push(new THREE.Vector3( 12, -7, 0));
-	const line = new THREE.Line( lineG, lineM );
-	line.name="line";
-	sceneGraph.add(line); 
-	console.log(line);
+    let Points1 = [];
+	Points1.push( new THREE.Vector3(0,0,-0.15));
+	Points1.push( new THREE.Vector3(0,0,0.15));
+    const Spline1 =  new THREE.CatmullRomCurve3( Points1 );
+
+    const extrudeSettings1 = {
+	steps: 150,
+	bevelEnabled: false,
+	extrudePath: Spline1
+};
+
+    const extrudeGeometry1 = new THREE.ExtrudeBufferGeometry( shape1, extrudeSettings1 );
+    const flecheG = new THREE.Mesh( extrudeGeometry1,new THREE.MeshLambertMaterial({color:0xc40712})) ;
+    flecheG.material.side = THREE.DoubleSide; 
+	flecheG.name = "flecheG";
+	flecheG.position.set(0,0.4,3.0);
+	flecheG.rotateZ(Math.PI/2);
+	flecheG.rotateX(Math.PI/2);
+	flecheG.rotateY(Math.PI/2);
+	A.add(flecheG);
 	
-	const arrowG = new THREE.Geometry();
-	arrowG.vertices.push( new THREE.Vector3(15, 2, 0 ) );
-	arrowG.vertices.push( new THREE.Vector3( 15, -2, 0 ) );
-	arrowG.vertices.push( new THREE.Vector3( 14.8, -2, 0 ) );
-	arrowG.vertices.push( new THREE.Vector3( 15.25, -2.5, 0 ) );
-	arrowG.vertices.push( new THREE.Vector3( 15.7, -2, 0 ) );
-	arrowG.vertices.push( new THREE.Vector3( 15.5, -2, 0 ) );
-	arrowG.vertices.push( new THREE.Vector3( 15.5,2, 0 ) );
-	arrowG.vertices.push( new THREE.Vector3( 15.7, 2, 0 ) );
-	arrowG.vertices.push( new THREE.Vector3( 15.25, 2.5, 0 ) );
-	arrowG.vertices.push( new THREE.Vector3( 14.8, 2, 0 ) );
-	arrowG.vertices.push( new THREE.Vector3( 15, 2, 0 ) );
-	const arrowM = new THREE.LineBasicMaterial( { color: 0xc51515, linewidth: 1 } );
-	const arrow = new THREE.Line( arrowG, arrowM );
-	arrow.name="arrow";
-	sceneGraph.add( arrow );
-	
-	const curve = new THREE.EllipseCurve(-5,0,5,5,3*Math.PI/4,5*Math.PI/4);
-	const points = curve.getSpacedPoints(30);
-	const circleG = new THREE.BufferGeometry().setFromPoints( points );
-	const circleM = new THREE.PointsMaterial( { color : 0xff0000, size : 0.2 } );
-	const circle = new THREE.Points( circleG, circleM );
-	circle.name="circle";
-	sceneGraph.add(circle);
-	
-	
-	const arrow2 = createArrow2();
-	arrow2.name="arrow2";
-	sceneGraph.add( arrow2 );*/
+	const extrudeGeometry2 = new THREE.ExtrudeBufferGeometry( shape1, extrudeSettings1 );
+    const flecheD = new THREE.Mesh( extrudeGeometry2,new THREE.MeshLambertMaterial({color:0xc40712})) ;
+    flecheD.material.side = THREE.DoubleSide; 
+	flecheD.name = "flecheD";
+	flecheD.position.set(0,0.4,3.0);
+	flecheD.rotateZ(Math.PI/2);
+	flecheD.rotateX(Math.PI/2);
+	flecheD.rotateY(Math.PI/2);
+	C.add(flecheD);
 	
 
 }

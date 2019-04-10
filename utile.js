@@ -28,7 +28,16 @@ function createBar(l, n){
 function leaveDot(scene,x,y,z){ // creer une sphere rouge dont les coordonnées seront position
 	const Geometry = new THREE.SphereGeometry(0.1,10,10);
 	
-	const material = new THREE.MeshLambertMaterial({ color:0xff0000 });
+	const material = new THREE.MeshLambertMaterial({ color:0xffffff });
+	const sphere = new THREE.Mesh(Geometry,material)
+	sphere.position.set(x,y,z);
+	scene.add(sphere);
+}
+
+function leaveDotBleu(scene,x,y,z){ // creer une sphere rouge dont les coordonnées seront position
+	const Geometry = new THREE.SphereGeometry(0.1,10,10);
+	
+	const material = new THREE.MeshLambertMaterial({ color:0xf5ff00 });
 	const sphere = new THREE.Mesh(Geometry,material)
 	sphere.position.set(x,y,z);
 	scene.add(sphere);

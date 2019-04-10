@@ -12,17 +12,53 @@ function main() {
         controls: null
     };
 
+	const pickingData = {
+        descente:false,
+		remontee:false,
+		enabled: true,		// Mode picking en cours ou désactivé (CTRL enfoncé)
+        enableDragAndDrop: false, // Drag and drop en cours ou désactivé
+        selectableObjects: [],    // Les objets selectionnables par picking
+        selectedObject: null,     // L'objet actuellement selectionné
+        selectedPlane: {p:null,n:null}, // Le plan de la caméra au moment de la selection. Plan donné par une position p, et une normale n.
+    };
+	
     initEmptyScene(sceneThreeJs);
-    init3DObjects(sceneThreeJs.sceneGraph);
+    init3DObjects(sceneThreeJs.sceneGraph,pickingData);
 
+   // *************************** //
+    // Creation d'un lanceur de rayon (ray caster) de Three.js pour le calcul de l'intersection entre un objet et un rayon
+    // *************************** //
+    const raycaster = new THREE.Raycaster();
 
+    // *************************** //
+    // Fonction de rappels
+    // *************************** //
+
+    // Récupération de la taille de la fenetre en tant que variable à part
+    const screenSize = {
+        w:sceneThreeJs.renderer.domElement.clientWidth,
+        h:sceneThreeJs.renderer.domElement.clientHeight
+    };
+
+// Fonction à appeler lors du clic de la souris: selection d'un objet
+    //  (Création d'un wrapper pour y passer les paramètres souhaités)
+    const wrapperMouseDown = function(event) { onMouseDown(event,raycaster,pickingData,screenSize,sceneThreeJs.camera); };
+    document.addEventListener( 'mousedown', wrapperMouseDown );
+
+    const wrapperMouseUp = function(event) { onMouseUp(event,pickingData); };
+    document.addEventListener( 'mouseup', wrapperMouseUp );
+
+    // Fonction à appeler lors du déplacement de la souris: translation de l'objet selectionné
+    const wrapperMouseMove = function(event) { onMouseMove(event, pickingData, screenSize, sceneThreeJs.camera,sceneThreeJs.sceneGraph) };
+    document.addEventListener( 'mousemove', wrapperMouseMove );
+	
     animationLoop(sceneThreeJs);
-	interactionWatt(sceneThreeJs);
+	
 
 }
 
 // Initialise les objets composant la scène 3D
-function init3DObjects(sceneGraph) {
+function init3DObjects(sceneGraph,pickingData) {
 	
 	const a = 4*2.1;
 	const b = 4*2.2;
