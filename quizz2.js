@@ -16,7 +16,7 @@ const observez = document.getElementById('observez');
 
 const myQuestions = [
   {
-    question: "Comparez les deux dispositifs. Pour tracer une ligne droite, lequel vous semble le plus précis ?",
+    question: "",
     answers: {
       a: "Le parallélogramme de Peaucellier",
       b: "Le dispositif de Watt",

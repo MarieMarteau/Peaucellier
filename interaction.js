@@ -86,8 +86,10 @@ function onMouseMove( event, pickingData, screenSize, camera, sceneGraph ) {
         const translation = pI.clone().sub( p );
 
         // Translation de l'objet et de la représentation visuelle
+
 		
 		if (pickingData.selectedObject==C){
+			
 			C.material.color.set(0xff0000);
 			A.material.color.set(0xffffff);
 			pickingData.selectedObject.translateZ(-translation.y);
